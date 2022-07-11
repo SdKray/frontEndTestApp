@@ -1,11 +1,13 @@
 import React, { useContext } from 'react';
 import { Header } from '../../components/Header';
 import { Loader } from '../../components/Loader';
+import { GlobalContext } from '../../context/GlobalContext';
 import { PokemonDetailContext } from './context';
 
 export const LayoutPokemonDetail = () => {
+    const {handleSavePokemon} = useContext(GlobalContext)
     const { pokemonData, loading } = useContext(PokemonDetailContext);
-    console.log(pokemonData);
+
     return (
         <>
             <Header />
@@ -13,7 +15,9 @@ export const LayoutPokemonDetail = () => {
                 <>
                     <div className='container mx-auto my-10'>
                         <div className='w-full mb-5 flex justify-end'>
-                            <button className='px-4 py-2 rounded-lg text-white font-semibold bg-blue-600 hover:bg-blue-700 '>Save</button>
+                            <button 
+                            onClick={()=>handleSavePokemon(pokemonData.id)}
+                            className='px-4 py-2 rounded-lg text-white font-semibold bg-blue-600 hover:bg-blue-700 '>Save</button>
                         </div>
                         <div className='flex flex-row'>
                             <div className='w-1/2 bg-red-600 flex justify-center items-center rounded-lg'>

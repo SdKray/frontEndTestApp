@@ -10,7 +10,6 @@ const HomeProvider = ({ children }) => {
 
     const getTenPokemons = async () => {
         const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/?limit=10&offset=${Math.floor(Math.random() * 1000)}`);
-        console.log(response);
         if (response && response.data && response.data.results && Array.isArray(response.data.results)) {
             setApiData(response.data.results);
         }
