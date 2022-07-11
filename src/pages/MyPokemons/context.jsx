@@ -25,16 +25,18 @@ const DELETE_POKEMON = gql`
 const MyPokemonsProvider = ({ children }) => {
     const { isUserAuth } = useContext(GlobalContext);
     const [pokemonsList, setPokemonsList] = useState([]);
+    const [pokeloading, setPokeloading] = useState(false);
 
     const [deletePokemon] = useMutation(DELETE_POKEMON);
 
-    const { data, loading, error } = useQuery(MY_POKEMONS, {
+    const { data, loading, error, refetch } = useQuery(MY_POKEMONS, {
         variables: { getMyPokemonsId: isUserAuth.id },
     });
 
     const getMyPokemons = async () => {
+        setPokeloading(true);
         let auxdata = [];
-        console.log(data);
+
         if (data && data.getMyPokemons && Array.isArray(data.getMyPokemons)) {
             for (const { pokemonID } of data.getMyPokemons) {
                 let responePokemonData = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonID}/`);
@@ -52,6 +54,7 @@ const MyPokemonsProvider = ({ children }) => {
             }
             setPokemonsList(auxdata);
         }
+        setPokeloading(false);
     };
 
     const handleDeletePokemon = async id => {
@@ -68,7 +71,7 @@ const MyPokemonsProvider = ({ children }) => {
 
                 console.log(reposeAtDeletePokemon);
 
-                toast.success('Pokemon Deleted');
+                toast.success('Pokemon deleted');
             } catch (error) {
                 toast.error(error.message);
                 console.log(error);
@@ -78,14 +81,17 @@ const MyPokemonsProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        getMyPokemons();
-
-        return () => {
-            setPokemonsList([]);
-        };
+        async function initData() {
+            await getMyPokemons();
+        }
+        initData();
     }, [data, loading]);
 
-    return <Provider value={{ pokemonsList, handleDeletePokemon }}>{children}</Provider>;
+    useEffect(() => {
+        refetch({ getMyPokemonsId: isUserAuth.id });
+    }, []);
+
+    return <Provider value={{ pokeloading, pokemonsList, handleDeletePokemon }}>{children}</Provider>;
 };
 
 export { MyPokemonsProvider, Consumer, MyPokemonsContext };

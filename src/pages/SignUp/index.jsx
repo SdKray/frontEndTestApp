@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { GlobalContext } from '../../context/GlobalContext';
 
 export const RegisterScreen = () => {
@@ -49,6 +50,13 @@ export const RegisterScreen = () => {
                                 onChange={handleSignUpInputChange}
                                 value={signUpValues?.password}
                             />
+                        </div>
+                    </div>
+                    <div className='flex items-center justify-end'>
+                        <div className='text-sm'>
+                            <Link to='/login' className='font-medium text-indigo-600 hover:text-indigo-500'>
+                                Log in
+                            </Link>
                         </div>
                     </div>
                     <div>
